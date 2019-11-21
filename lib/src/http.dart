@@ -77,10 +77,10 @@ class NTLMClient {
         "You must provide a password or the LM and NT hash of a password.",
       );
     }
-    var ioClient = new HttpClient()
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-    this._inner = inner ?? ioClient;
+    // Client ioClient = new HttpClient()
+    //   ..badCertificateCallback =
+    //       (X509Certificate cert, String host, int port) => true;
+    this._inner = inner ?? Client();
   }
 
   /// Function that does the handles NTLM authentication.
