@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:ntlm/src/messages/messages.dart';
+import 'package:http/http.dart' as http;
 
 /// Callback for when a request needs to be made.
 ///
@@ -16,16 +17,22 @@ typedef _RequestCallback = Future<Response> Function(
 class NTLMClient {
   /// The NT domain used by this client to authenticate
   String domain;
+
   /// The NT workstation used by this client to authenticate
   String workstation;
+
   /// The username of the user trying to authenticate
   String username;
+
   /// The password of the user trying to authenticate
   String password;
+
   /// The lan manager hash of the user's password
   String lmPassword;
+
   /// The NT hash of the user's password
   String ntPassword;
+
   /// The HTTP client used by this NTLMClient to make requests
   Client _inner;
 
@@ -70,8 +77,10 @@ class NTLMClient {
         "You must provide a password or the LM and NT hash of a password.",
       );
     }
-  
-    this._inner = inner ?? Client();
+    var ioClient = new HttpClient()
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    this._inner = inner ?? ioClient;
   }
 
   /// Function that does the handles NTLM authentication.
@@ -127,9 +136,9 @@ class NTLMClient {
     return _ntlm(
       headers: headers,
       request: (ntlmHeaders) => _inner.get(
-            url,
-            headers: ntlmHeaders,
-          ),
+        url,
+        headers: ntlmHeaders,
+      ),
     );
   }
 
@@ -139,11 +148,11 @@ class NTLMClient {
     return _ntlm(
       headers: headers,
       request: (ntlmHeaders) => _inner.post(
-            url,
-            headers: ntlmHeaders,
-            body: body,
-            encoding: encoding,
-          ),
+        url,
+        headers: ntlmHeaders,
+        body: body,
+        encoding: encoding,
+      ),
     );
   }
 
@@ -153,11 +162,11 @@ class NTLMClient {
     return _ntlm(
       headers: headers,
       request: (ntlmHeaders) => _inner.patch(
-            url,
-            headers: ntlmHeaders,
-            body: body,
-            encoding: encoding,
-          ),
+        url,
+        headers: ntlmHeaders,
+        body: body,
+        encoding: encoding,
+      ),
     );
   }
 
@@ -167,11 +176,11 @@ class NTLMClient {
     return _ntlm(
       headers: headers,
       request: (ntlmHeaders) => _inner.put(
-            url,
-            headers: ntlmHeaders,
-            body: body,
-            encoding: encoding,
-          ),
+        url,
+        headers: ntlmHeaders,
+        body: body,
+        encoding: encoding,
+      ),
     );
   }
 
@@ -180,9 +189,9 @@ class NTLMClient {
     return _ntlm(
       headers: headers,
       request: (ntlmHeaders) => _inner.head(
-            url,
-            headers: ntlmHeaders,
-          ),
+        url,
+        headers: ntlmHeaders,
+      ),
     );
   }
 
@@ -191,9 +200,9 @@ class NTLMClient {
     return _ntlm(
       headers: headers,
       request: (ntlmHeaders) => _inner.delete(
-            url,
-            headers: ntlmHeaders,
-          ),
+        url,
+        headers: ntlmHeaders,
+      ),
     );
   }
 }
