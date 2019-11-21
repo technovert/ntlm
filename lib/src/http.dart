@@ -69,7 +69,7 @@ class NTLMClient {
     this.password,
     this.lmPassword,
     this.ntPassword,
-    Client inner,
+    IOClient inner,
   }) {
     if (this.password == null &&
         (this.lmPassword == null || this.ntPassword == null)) {
