@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:http/io_client.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:ntlm/src/messages/messages.dart';
@@ -34,8 +35,7 @@ class NTLMClient {
   String ntPassword;
 
   /// The HTTP client used by this NTLMClient to make requests
-  Client _inner;
-
+  IOClient _inner;
   /// Creates a new NTLM client
   ///
   /// The [username] is required as is either the [password]...
@@ -77,10 +77,10 @@ class NTLMClient {
         "You must provide a password or the LM and NT hash of a password.",
       );
     }
-    // Client ioClient = new HttpClient()
-    //   ..badCertificateCallback =
-    //       (X509Certificate cert, String host, int port) => true;
-    this._inner = inner ?? Client();
+    var httpClient =  new HttpClient()
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    this._inner = inner ?? IOClient(httpClient);
   }
 
   /// Function that does the handles NTLM authentication.
